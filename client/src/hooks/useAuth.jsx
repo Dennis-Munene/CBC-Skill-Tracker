@@ -1,51 +1,45 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { loginUserApi, registerUserApi, fetchProfileApi } from "../api/authApi.js";
-
-const AuthContext = createContext();
-
-export const AuthProvider = ({ children }) => {
+export function useAuth() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Check for token and fetch profile on load
+  // Load logged-in profile if cookie token exists
   useEffect(() => {
-    const initUser = async () => {
+    const loadProfile = async () => {
       try {
-        const profile = await fetchProfileApi();
-        setUser(profile);
-      } catch (err) {
+        const res = await fetchProfileApi();
+        setUser(res.user);
+      } catch (error) {
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
-    initUser();
+
+    loadProfile();
   }, []);
 
-  const login = async (credentials) => {
-    const data = await loginUserApi(credentials);
-    setUser(data.user);
-    return data;
+  const login = async (data) => {
+    const res = await loginApi(data);
+    setUser(res.user);
+    return res;
   };
 
-  const register = async (details) => {
-    const data = await registerUserApi(details);
-    setUser(data.user);
-    return data;
+  const register = async (data) => {
+    const res = await registerApi(data);
+    setUser(res.user);
+    return res;
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
     setUser(null);
+    localStorage.removeItem("token");
   };
 
-  return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export function useAuth() {
-  return useContext(AuthContext);
+  return {
+    user,
+    loading,
+    login,
+    register,
+    logout,
+  };
 }

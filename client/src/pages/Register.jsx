@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const { register } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     name: "",
@@ -22,10 +24,13 @@ export default function Register() {
     setError("");
 
     try {
-      await register(form);
-      alert("Registration successful!");
+      const res = await register(form);
+
+      if (res.user.role === "student") navigate("/student/dashboard");
+      else if (res.user.role === "teacher") navigate("/teacher/dashboard");
+      else if (res.user.role === "admin") navigate("/admin/dashboard");
     } catch (err) {
-      setError(err.message || "Registration failed");
+      setError(err.response?.data?.message || "Registration failed");
     }
   };
 
@@ -37,7 +42,6 @@ export default function Register() {
         {error && <p className="text-red-500 text-center mb-2">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           <input
             type="text"
             name="name"
