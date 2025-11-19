@@ -1,15 +1,15 @@
+// client/src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 import { loginApi, registerApi, fetchProfileApi } from "../api/authApi";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Load user on refresh
   useEffect(() => {
-    const load = async () => {
+    const loadProfile = async () => {
       try {
         const res = await fetchProfileApi();
         setUser(res.user);
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    load();
+    loadProfile();
   }, []);
 
   const login = async (data) => {
@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("token");
   };
 
   return (
@@ -45,4 +46,8 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  return context;
+};
