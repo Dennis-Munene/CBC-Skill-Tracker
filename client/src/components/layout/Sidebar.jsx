@@ -1,50 +1,71 @@
-// client/src/components/layout/Sidebar.jsx
-import { Link, useLocation } from "react-router-dom";
+// src/components/layout/Sidebar.jsx
+import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
 
-export default function Sidebar({ isOpen, setIsOpen }) {
+export default function Sidebar({ isOpen }) {
   const { user } = useAuth();
-  const location = useLocation();
-
-  const links = {
-    student: [
-      { name: "Dashboard", path: "/student/dashboard" },
-      { name: "Tasks", path: "/student/tasks" },
-    ],
-    teacher: [
-      { name: "Dashboard", path: "/teacher/dashboard" },
-      { name: "Tasks", path: "/teacher/tasks" },
-    ],
-    admin: [
-      { name: "Dashboard", path: "/admin/dashboard" },
-      { name: "Users", path: "/admin/users" },
-    ],
-  };
-
-  const menuLinks = user ? links[user.role] || [] : [];
 
   return (
-    <div
-      className={`fixed inset-y-0 left-0 bg-white w-64 shadow-lg transform transition-transform duration-300 z-50
-        ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:static md:inset-0`}
+    <aside
+      className={`bg-gray-800 text-white w-64 p-6 transition-transform duration-300 ${
+        isOpen ? "translate-x-0" : "-translate-x-64"
+      } md:translate-x-0`}
     >
-      <div className="flex items-center justify-center h-16 shadow-md">
-        <h1 className="font-bold text-xl">Skill Tracker</h1>
-      </div>
-      <nav className="mt-6">
-        {menuLinks.map((link) => (
-          <Link
-            key={link.path}
-            to={link.path}
-            className={`block px-6 py-3 text-gray-700 hover:bg-gray-200 transition-colors ${
-              location.pathname === link.path ? "bg-gray-200 font-semibold" : ""
-            }`}
-            onClick={() => setIsOpen(false)}
-          >
-            {link.name}
-          </Link>
-        ))}
-      </nav>
-    </div>
+      <h2 className="text-2xl font-bold mb-6">Menu</h2>
+      <ul className="space-y-2">
+        {user?.role === "student" && (
+          <>
+            <li>
+              <Link to="/dashboard" className="hover:underline">
+                Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link to="/student/tasks" className="hover:underline">
+                Tasks
+              </Link>
+            </li>
+            <li>
+              <Link to="/student/progress" className="hover:underline">
+                Progress
+              </Link>
+            </li>
+          </>
+        )}
+        {user?.role === "teacher" && (
+          <>
+            <li>
+              <Link to="/dashboard" className="hover:underline">
+                Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link to="/teacher/tasks" className="hover:underline">
+                Manage Tasks
+              </Link>
+            </li>
+            <li>
+              <Link to="/teacher/grades" className="hover:underline">
+                Grade Submissions
+              </Link>
+            </li>
+          </>
+        )}
+        {user?.role === "admin" && (
+          <>
+            <li>
+              <Link to="/dashboard" className="hover:underline">
+                Admin Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/users" className="hover:underline">
+                Manage Users
+              </Link>
+            </li>
+          </>
+        )}
+      </ul>
+    </aside>
   );
 }

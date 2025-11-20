@@ -1,40 +1,29 @@
-// client/src/components/Navbar.jsx
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext.jsx";
+// src/components/Navbar.jsx
+import { useAuth } from "../context/AuthContext.jsx"; // fixed path
+import { Link } from "react-router-dom";
 
 export default function Navbar({ setSidebarOpen }) {
   const { user, logout } = useAuth();
-  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow flex justify-between items-center p-4">
+    <nav className="flex items-center justify-between bg-white p-4 shadow">
       <button
-        className="md:hidden text-gray-600"
+        className="text-gray-500 focus:outline-none lg:hidden"
         onClick={() => setSidebarOpen((prev) => !prev)}
       >
         ☰
       </button>
-      <h1 className="font-bold text-xl">CBC Skill Tracker</h1>
-      {user && (
-        <div className="relative">
+      <div className="flex items-center gap-4">
+        <span className="font-bold text-gray-700">Welcome, {user?.name || "Guest"}</span>
+        {user && (
           <button
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className="flex items-center space-x-2 bg-gray-200 p-2 rounded"
+            onClick={logout}
+            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
           >
-            <span>{user.name}</span>
+            Logout
           </button>
-          {menuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-10">
-              <button
-                onClick={logout}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-              >
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-    </header>
+        )}
+      </div>
+    </nav>
   );
 }

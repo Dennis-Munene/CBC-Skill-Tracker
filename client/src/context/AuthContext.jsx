@@ -1,38 +1,23 @@
-// client/src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
-import { loginApi, registerApi, fetchProfileApi } from "../api/authApi";
+import { loginApi, registerApi, getProfileApi } from "../api/authApi.js";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  // Load user on page refresh
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const res = await fetchProfileApi();
-        setUser(res.user);
-      } catch (err) {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadProfile();
-  }, []);
-
-  const login = async (data) => {
-    const res = await loginApi(data);
-    setUser(res.user);
-    return res;
+  const login = async (credentials) => {
+    const data = await loginApi(credentials);
+    setUser(data.user);
+    localStorage.setItem("token", data.token);
+    return data;
   };
 
-  const register = async (data) => {
-    const res = await registerApi(data);
-    setUser(res.user);
-    return res;
+  const register = async (userInfo) => {
+    const data = await registerApi(userInfo);
+    setUser(data.user);
+    localStorage.setItem("token", data.token);
+    return data;
   };
 
   const logout = () => {
@@ -40,8 +25,21 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
   };
 
+  const fetchProfile = async () => {
+    try {
+      const data = await getProfileApi();
+      setUser(data.user);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );

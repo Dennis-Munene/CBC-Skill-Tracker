@@ -1,18 +1,20 @@
-// client/src/pages/AdminDashboard.jsx
+// src/pages/AdminDashboard.jsx
 import MainLayout from "../components/layout/MainLayout.jsx";
-import { useAuth } from "../context/AuthContext.jsx";
 
 export default function AdminDashboard() {
-  const { user } = useAuth();
-
   return (
     <MainLayout>
-      <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
-      <p>Welcome, {user.name}. Here you can manage users and system settings.</p>
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="bg-white p-4 rounded shadow">Manage Students</div>
-        <div className="bg-white p-4 rounded shadow">Manage Teachers</div>
-        <div className="bg-white p-4 rounded shadow">System Settings</div>
+      <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
+      <p>Manage all users and system settings.</p>
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white shadow p-4 rounded">
+          <h2 className="font-bold">Users</h2>
+          <p>View, edit, or delete users.</p>
+        </div>
+        <div className="bg-white shadow p-4 rounded">
+          <h2 className="font-bold">Settings</h2>
+          <p>System configuration and settings.</p>
+        </div>
       </div>
     </MainLayout>
   );

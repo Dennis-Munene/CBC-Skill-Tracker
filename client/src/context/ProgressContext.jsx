@@ -1,26 +1,21 @@
-// client/src/context/ProgressContext.jsx
-import { createContext, useContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
+import * as progressApi from "../api/progressApi";
 
 const ProgressContext = createContext();
 
 export const ProgressProvider = ({ children }) => {
   const [progress, setProgress] = useState([]);
 
-  // Function to update progress data
-  const updateProgress = (newProgress) => {
-    setProgress(newProgress);
+  const loadProgress = async (studentId) => {
+    const data = await progressApi.getProgress(studentId);
+    setProgress(data);
   };
 
   return (
-    <ProgressContext.Provider value={{ progress, updateProgress }}>
+    <ProgressContext.Provider value={{ progress, loadProgress }}>
       {children}
     </ProgressContext.Provider>
   );
 };
 
-// Custom hook for easier usage
-export const useProgress = () => {
-  const context = useContext(ProgressContext);
-  if (!context) throw new Error("useProgress must be used within ProgressProvider");
-  return context;
-};
+export const useProgress = () => useContext(ProgressContext);

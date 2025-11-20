@@ -1,19 +1,17 @@
-import axios from "./axios";
 
-// REGISTER
-export const registerApi = async (data) => {
-  const res = await axios.post("/auth/register", data);
-  return res.data;
+import axios from "./axios.js"; 
+
+export const loginApi = async (credentials) => {
+  const { data } = await axios.post("/auth/login", credentials);
+  return data;
 };
 
-// LOGIN
-export const loginApi = async (data) => {
-  const res = await axios.post("/auth/login", data);
-  return res.data;
+export const registerApi = async (userInfo) => {
+  const { data } = await axios.post("/auth/register", userInfo);
+  return data;
 };
 
-// GET PROFILE
-export const fetchProfileApi = async () => {
-  const res = await axios.get("/auth/profile");
-  return res.data;
+export const getProfileApi = async () => {
+  const { data } = await axios.get("/auth/profile");
+  return data;
 };
