@@ -7,35 +7,34 @@ export default function Navbar({ setSidebarOpen }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow px-4 py-3 flex justify-between items-center">
-      <div className="flex items-center space-x-2">
-        <button
-          className="text-gray-600 focus:outline-none md:hidden"
-          onClick={() => setSidebarOpen(true)}
-        >
-          ☰
-        </button>
-        <span className="font-bold text-xl">CBC Skill Tracker</span>
-      </div>
-      <div className="relative">
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="flex items-center space-x-2 focus:outline-none"
-        >
-          <span>{user?.name}</span>
-          <span>▼</span>
-        </button>
-        {menuOpen && (
-          <div className="absolute right-0 mt-2 w-40 bg-white shadow rounded-lg py-2 z-10">
-            <button
-              className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-              onClick={logout}
-            >
-              Logout
-            </button>
-          </div>
-        )}
-      </div>
-    </nav>
+    <header className="bg-white shadow flex justify-between items-center p-4">
+      <button
+        className="md:hidden text-gray-600"
+        onClick={() => setSidebarOpen((prev) => !prev)}
+      >
+        ☰
+      </button>
+      <h1 className="font-bold text-xl">CBC Skill Tracker</h1>
+      {user && (
+        <div className="relative">
+          <button
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="flex items-center space-x-2 bg-gray-200 p-2 rounded"
+          >
+            <span>{user.name}</span>
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-10">
+              <button
+                onClick={logout}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </header>
   );
 }

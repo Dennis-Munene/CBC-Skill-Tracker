@@ -1,51 +1,37 @@
 // client/src/pages/StudentTasks.jsx
-import { useState, useEffect } from "react";
-import { useProgress } from "../context/ProgressContext.jsx"; // <-- corrected import
+import { useEffect, useState } from "react";
+import MainLayout from "../components/layout/MainLayout.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function StudentTasks() {
   const { user } = useAuth();
-  const { progress, updateProgress } = useProgress();
-  const [loading, setLoading] = useState(true);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    // Example: fetch student's progress
-    const fetchProgress = async () => {
-      try {
-        // Replace with real API call if needed
-        const dummyData = [
-          { task: "Task 1", completed: true },
-          { task: "Task 2", completed: false },
-        ];
-        updateProgress(dummyData);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProgress();
-  }, [updateProgress]);
-
-  if (loading) return <p className="text-center mt-10">Loading progress...</p>;
+    // Simulate API fetch
+    setTasks([
+      { id: 1, title: "Complete React Project", progress: 70 },
+      { id: 2, title: "Submit Math Assignment", progress: 40 },
+    ]);
+  }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Welcome, {user?.name}</h1>
-      <h2 className="text-xl font-semibold mb-2">Your Tasks</h2>
-      <ul className="space-y-2">
-        {progress.map((item, idx) => (
-          <li
-            key={idx}
-            className={`p-3 rounded-md ${
-              item.completed ? "bg-green-100" : "bg-red-100"
-            }`}
-          >
-            {item.task} - {item.completed ? "Completed" : "Pending"}
-          </li>
+    <MainLayout>
+      <h2 className="text-2xl font-bold mb-4">Welcome, {user.name}</h2>
+      <div className="grid gap-4">
+        {tasks.map((task) => (
+          <div key={task.id} className="bg-white p-4 rounded shadow">
+            <h3 className="font-semibold">{task.title}</h3>
+            <div className="w-full bg-gray-200 rounded-full h-3 mt-2">
+              <div
+                className="bg-blue-600 h-3 rounded-full"
+                style={{ width: `${task.progress}%` }}
+              ></div>
+            </div>
+            <p className="mt-1 text-sm text-gray-600">{task.progress}% completed</p>
+          </div>
         ))}
-      </ul>
-    </div>
+      </div>
+    </MainLayout>
   );
 }

@@ -1,7 +1,7 @@
 // client/src/components/layout/MainLayout.jsx
 import { useState } from "react";
 import Navbar from "../Navbar.jsx";
-import Sidebar from "./Sidebar.jsx";
+import Sidebar from "./Sidebar.jsx"; // Correct path
 
 export default function MainLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
